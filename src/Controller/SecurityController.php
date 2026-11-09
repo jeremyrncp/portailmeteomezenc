@@ -16,6 +16,10 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_portal');
+        }
+
         return $this->render('security/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError(),

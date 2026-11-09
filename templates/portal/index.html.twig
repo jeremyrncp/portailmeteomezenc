@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ city ? city.name ~ ' · ' : '' }}Portail Météo Mézenc{% endblock %}
+
+{% block body %}
+<main id="main" class="portal">
+    <section class="intro">
+        <p class="eyebrow">VOTRE MÉTÉO LOCALE</p>
+        <div class="intro-heading"><h1>Le temps, près de chez vous.</h1><span class="region">Massif du Mézenc</span></div>
+        <p>Retrouvez les derniers bulletins météo de votre commune, en un seul endroit.</p>
+    </section>
+    <div class="portal-grid">
+        <aside class="sidebar">
+            <section class="commune-panel">
+                <span class="eyebrow">MA COMMUNE</span>
+                <div class="location-icon" aria-hidden="true">⌖</div>
+                <h2>{{ city ? city.name : 'Commune à définir' }}</h2>
+                {% if city and city.postalCode %}<p class="postal">{{ city.postalCode }}</p>{% endif %}
+                <p>Les prévisions affichées correspondent à la commune associée à votre compte.</p>
+            </section>
+            <section class="account-panel"><h2>Mon espace</h2><p class="account-email">{{ app.user.userIdentifier }}</p><p>Besoin de changer de commune ? Contactez votre administrateur.</p></section>
+        </aside>
+        <section class="bulletins" aria-labelledby="bulletin-title">
+            <div class="section-heading"><h2 id="bulletin-title">Les dernières prévisions</h2><span>Bulletins locaux</span></div>
+            {% if not city %}
+                <div class="empty-state"><span aria-hidden="true">⌖</span><h3>Quelle est votre commune ?</h3><p>Aucune commune n’est encore associée à votre compte. Votre administrateur peut la renseigner pour vous donner accès aux prévisions locales.</p></div>
+            {% elseif forecasts is empty %}
+                <div class="empty-state"><span aria-hidden="true">☁</span><h3>Le prochain bulletin se prépare</h3><p>Aucune prévision n’est encore disponible pour {{ city.name }}. Revenez consulter cette page après la publication d’un bulletin.</p></div>
+            {% else %}
+                {% set latest = forecasts|first %}
+                <article class="latest-forecast">
+                    <div class="bulletin-meta"><span class="badge">Dernier bulletin</span>{% if latest.createdAt %}<time datetime="{{ latest.createdAt|date('c', 'Europe/Paris') }}">Publié le {{ latest.createdAt|date('d/m/Y à H:i', 'Europe/Paris') }}</time>{% else %}<span>Date non renseignée</span>{% endif %}</div>
+                    <h3>{{ city.name }} <span aria-hidden="true">☁</span></h3>
+                    <div class="forecast-text">{{ latest.foreca ?: 'Le contenu de cette prévision n’est pas encore renseigné.' }}</div>
+                    <div class="bulletin-footer">Prévisions locales · Météo Mézenc</div>
+                </article>
+                {% if forecasts|length > 1 %}
+                    <h3 class="history-title">Bulletins précédents</h3>
+                    <div class="history">
+                        {% for forecast in forecasts|slice(1) %}
+                            <details class="history-item">
+                                <summary><span>{% if forecast.createdAt %}Bulletin du {{ forecast.createdAt|date('d/m/Y à H:i', 'Europe/Paris') }}{% else %}Bulletin sans date{% endif %}</span><span class="expand" aria-hidden="true">+</span></summary>
+                                <div class="forecast-text">{{ forecast.foreca ?: 'Le contenu de cette prévision n’est pas encore renseigné.' }}</div>
+                            </details>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </section>
+    </div>
+</main>
+{% endblock %}

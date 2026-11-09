@@ -32,7 +32,7 @@ class AdminTest extends WebTestCase
         $client->submit($crawler->selectButton('Se connecter')->form([
             '_username' => 'admin', '_password' => 'test-admin-password',
         ]));
-        self::assertResponseRedirects('/admin');
+        self::assertResponseRedirects('/');
         $provider = static::getContainer()->get('security.user.provider.concrete.admin_provider');
         $admin = $provider->loadUserByIdentifier('admin');
         $hasher = static::getContainer()->get('security.password_hasher_factory')->getPasswordHasher($admin);

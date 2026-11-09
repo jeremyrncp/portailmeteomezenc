@@ -16,28 +16,20 @@ class ForecastRepository extends ServiceEntityRepository
         parent::__construct($registry, Forecast::class);
     }
 
-//    /**
-//     * @return Forecast[] Returns an array of Forecast objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Forecast
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return list<Forecast>
+     */
+    public function findLatestForCity(\App\Entity\City $city): array
+    {
+        return $this->createQueryBuilder('forecast')
+            ->andWhere('forecast.city = :city')
+            ->setParameter('city', $city)
+            ->addSelect('CASE WHEN forecast.createdAt IS NULL THEN 1 ELSE 0 END AS HIDDEN undated')
+            ->orderBy('undated', 'ASC')
+            ->addOrderBy('forecast.createdAt', 'DESC')
+            ->addOrderBy('forecast.id', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 }

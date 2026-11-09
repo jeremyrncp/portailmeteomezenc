@@ -1,18 +1,19 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Connexion administration{% endblock %}
-
+{% block title %}Connexion · Portail Météo Mézenc{% endblock %}
 {% block body %}
-    <main>
-        <h1>Administration Météo Mézenc</h1>
-        {% if error %}<p role="alert">Identifiants incorrects.</p>{% endif %}
+<main id="main" class="login-layout">
+    <section class="login-intro"><p class="eyebrow">PORTAIL MÉTÉO MÉZENC</p><h1>Votre météo locale.<br>Tout simplement.</h1><p>Connectez-vous pour retrouver les dernières prévisions de votre commune et suivre les bulletins Météo Mézenc.</p><div class="landscape" aria-hidden="true"><span class="sun"></span><span class="mountain mountain-back"></span><span class="mountain mountain-front"></span><span class="landscape-caption">AU RYTHME DU MÉZENC</span></div></section>
+    <section class="login-card" aria-labelledby="login-title"><p class="eyebrow">MON ESPACE</p><h2 id="login-title">Bienvenue sur le portail</h2><p>Vos prévisions sont à une connexion d’ici.</p>
+        {% if error %}<p class="error" role="alert">Connexion impossible. Vérifiez votre identifiant et votre mot de passe.</p>{% endif %}
         <form method="post" action="{{ path('app_login') }}">
-            <label for="username">Identifiant</label>
-            <input id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus>
+            <label for="username">Adresse e-mail ou identifiant</label>
+            <input id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus placeholder="vous@exemple.fr">
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="_password" autocomplete="current-password" required>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <button type="submit">Se connecter</button>
+            <button type="submit">Se connecter <span aria-hidden="true">→</span></button>
         </form>
-    </main>
+        <p class="login-help">Pour obtenir un accès ou réinitialiser votre mot de passe, contactez votre administrateur.</p>
+    </section>
+</main>
 {% endblock %}

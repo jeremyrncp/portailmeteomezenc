@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-        {% endblock %}
-
-        {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphp_hot_reload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#193d4d">
+        <title>{% block title %}Portail Météo Mézenc{% endblock %}</title>
+        <link rel="icon" href="{{ app.request.basePath }}/logo.jpg">
+        <link rel="stylesheet" href="{{ app.request.basePath }}/styles/portal.css">
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}{% endblock %}
     </head>
     <body>
+        <a class="skip-link" href="#main">Aller au contenu</a>
+        <header class="header">
+            <a class="brand" href="{{ path('app_portal') }}" aria-label="Portail Météo Mézenc — Accueil">
+                <img src="{{ app.request.basePath }}/logo.jpg" alt="Météo Mézenc, votre info météo locale" width="175" height="118">
+                <span>Portail Météo Mézenc<small>La météo de votre commune</small></span>
+            </a>
+            <nav aria-label="Navigation principale">
+                {% if app.user %}
+                    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}">Administration</a>{% endif %}
+                    <a class="logout" href="{{ logout_path('main') }}">Déconnexion</a>
+                {% else %}
+                    <span class="nav-label">Votre espace de consultation</span>
+                {% endif %}
+            </nav>
+        </header>
         {% block body %}{% endblock %}
+        <footer class="footer"><span>Météo Mézenc</span><span>Votre information météo locale · Massif du Mézenc</span></footer>
     </body>
 </html>
