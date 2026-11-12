@@ -59,7 +59,7 @@ class ApIController
 
         /** @var WeatherStation $weatherStation */
         foreach ($weatherStations as $weatherStation) {
-            $weatherStationsFiltered[$weatherStation->getUuid()] = $weatherStation;
+            $weatherStationsFiltered[$weatherStation->getUuid()->toString()] = $weatherStation;
         }
 
         return $weatherStationsFiltered;
