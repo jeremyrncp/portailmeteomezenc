@@ -28,6 +28,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(CityCrudController::class, 'Villes', 'fa fa-city');
         yield MenuItem::linkTo(ForecastCrudController::class, 'Prévisions', 'fa fa-cloud-sun');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users');
+        yield MenuItem::linkTo(WeatherStationCrudController::class, 'Stations météo', 'fa fa-users');
+        yield MenuItem::linkTo(WeatherDataCrudController::class, 'Données météo', 'fa fa-users');
         yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
     }
 }
