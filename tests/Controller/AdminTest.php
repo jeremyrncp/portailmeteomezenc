@@ -2,12 +2,48 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\{City, Forecast, User};
+use App\Entity\{City, Forecast, User, WeatherStation};
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminTest extends WebTestCase
 {
+    public function testWeatherStationUuidForm(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
+        $schema = new SchemaTool($entityManager);
+        $schema->dropSchema($metadata);
+        $schema->createSchema($metadata);
+        $client->loginUser(static::getContainer()->get('security.user.provider.concrete.admin_provider')->loadUserByIdentifier('admin'));
+
+        $uuid = '550e8400-e29b-41d4-a716-446655440000';
+        $crawler = $client->request('GET', '/admin/weather-station/new');
+        self::assertResponseIsSuccessful();
+        $client->submit($crawler->filter('form[name="WeatherStation"]')->form(), [
+            'WeatherStation[name]' => 'Mézenc', 'WeatherStation[uuid]' => $uuid,
+        ]);
+        self::assertResponseRedirects();
+        $station = static::getContainer()->get('doctrine')->getRepository(WeatherStation::class)->findOneBy(['name' => 'Mézenc']);
+        self::assertNotNull($station);
+        self::assertSame($uuid, (string) $station->getUuid());
+        $editPath = '/admin/weather-station/'.$station->getId().'/edit';
+
+        $crawler = $client->request('GET', $editPath);
+        self::assertResponseIsSuccessful();
+        self::assertSame($uuid, $crawler->filter('input[name="WeatherStation[uuid]"]')->attr('value'));
+        $client->submit($crawler->filter('form[name="WeatherStation"]')->form(), ['WeatherStation[uuid]' => 'invalid-uuid']);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorExists('.is-invalid');
+
+        $crawler = $client->request('GET', $editPath);
+        $client->submit($crawler->filter('form[name="WeatherStation"]')->form(), ['WeatherStation[uuid]' => '']);
+        self::assertResponseRedirects();
+        $station = static::getContainer()->get('doctrine')->getRepository(WeatherStation::class)->findOneBy(['name' => 'Mézenc']);
+        self::assertNull($station->getUuid());
+    }
+
     public function testAdminRequiresAuthentication(): void
     {
         $client = static::createClient();
