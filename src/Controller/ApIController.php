@@ -21,7 +21,7 @@ class ApIController
 
         $data = json_decode($request->getContent(), true);
 
-        file_put_contents(__DIR__ . "/../../../public/webhook/" . time() . ".json", $request->getContent());
+        file_put_contents(__DIR__ . "/../../public/webhook/" . time() . ".json", $request->getContent());
 
         foreach ($data["data"] as $d) {
             if ($d["device"] === array_key_exists($d["device"], $weatherStationsFiltered)) {
