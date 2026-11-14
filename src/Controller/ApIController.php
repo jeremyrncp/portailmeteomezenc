@@ -6,6 +6,7 @@ use App\Entity\WeatherData;
 use App\Entity\WeatherStation;
 use App\Repository\WeatherStationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApIController
 {
     #[Route('/webhook/datacake', name: 'app_webhook_datacake', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, WeatherStationRepository $weatherStationRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, WeatherStationRepository $weatherStationRepository): JsonResponse
     {
         $weatherStationsFiltered = $this->filterWeatherStationByUuid($weatherStationRepository->findAll());
 
@@ -53,6 +54,8 @@ class ApIController
             $entityManager->persist($weatherData);
             $entityManager->flush();
         }
+
+        return new JsonResponse(["status" => "ok"]);
     }
 
     private function filterWeatherStationByUuid($weatherStations): array
