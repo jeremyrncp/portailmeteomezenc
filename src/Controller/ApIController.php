@@ -8,7 +8,6 @@ use App\Repository\WeatherStationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ApIController
@@ -25,7 +24,7 @@ class ApIController
         file_put_contents(__DIR__ . "/../../public/webhook/" . time() . ".json", $request->getContent());
 
         foreach ($data["data"] as $d) {
-            if ($d["device"] === array_key_exists($d["device"], $weatherStationsFiltered)) {
+            if (array_key_exists($d["device"], $weatherStationsFiltered)) {
 
                 if (array_key_exists($d["timestamp"], $weatherDataFiltered) === false) {
                     $weatherDataFiltered[$d["timestamp"]] = [];
