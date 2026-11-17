@@ -44,13 +44,13 @@ class ApIController
 
 
         foreach($weatherDataFiltered as $timestamp => $weatherData) {
-            $weatherData = new WeatherData();
-            $weatherData->setWeatherStation($weatherData["weatherStation"]);
-            $weatherData->setTemperature($weatherData["temperature"]);
-            $weatherData->setHumidity($weatherData["humidity"]);
-            $weatherData->setCreatedAt(new \DateTime($timestamp));
+            $weatherDataEntity = new WeatherData();
+            $weatherDataEntity->setWeatherStation($weatherData["weatherStation"]);
+            $weatherDataEntity->setTemperature($weatherData["temperature"]);
+            $weatherDataEntity->setHumidity($weatherData["humidity"]);
+            $weatherDataEntity->setCreatedAt(new \DateTime($timestamp));
 
-            $entityManager->persist($weatherData);
+            $entityManager->persist($weatherDataEntity);
             $entityManager->flush();
         }
 
