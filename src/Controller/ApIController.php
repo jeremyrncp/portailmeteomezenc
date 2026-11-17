@@ -48,7 +48,7 @@ class ApIController
             $weatherDataEntity->setWeatherStation($weatherData["weatherStation"]);
             $weatherDataEntity->setTemperature($weatherData["temperature"]);
             $weatherDataEntity->setHumidity($weatherData["humidity"]);
-            $weatherDataEntity->setCreatedAt(new \DateTime($timestamp));
+            $weatherDataEntity->setCreatedAt((new \DateTime())->setTimestamp($timestamp));
 
             $entityManager->persist($weatherDataEntity);
             $entityManager->flush();
