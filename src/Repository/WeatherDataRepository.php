@@ -24,7 +24,7 @@ class WeatherDataRepository extends ServiceEntityRepository
             ->andWhere('wd.createdAt >= :dateTime')
             ->setParameter('station', $weatherStation)
             ->setParameter('dateTime', $dateTime)
-            ->orderBy('w.createdAt', 'DESC')
+            ->orderBy('wd.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
