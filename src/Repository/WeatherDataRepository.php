@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WeatherData;
+use App\Entity\WeatherStation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,18 @@ class WeatherDataRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, WeatherData::class);
+    }
+
+    public function findSinceWeatherDataByStation(WeatherStation $weatherStation, \DateTime $dateTime): array
+    {
+        return $this->createQueryBuilder('wd')
+            ->andWhere('wd.weatherStation = :station')
+            ->andWhere('wd.createdAt >= :dateTime')
+            ->setParameter('station', $weatherStation)
+            ->setParameter('dateTime', $dateTime)
+            ->orderBy('w.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
