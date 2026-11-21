@@ -37,7 +37,7 @@
                 {% if forecasts|length > 1 %}
                     <h3 class="history-title">Bulletins précédents</h3>
                     <div class="history">
-                        {% for forecast in forecasts|slice(1) %}
+                        {% for forecast in forecasts %}
                             <details class="history-item">
                                 <summary><span>{% if forecast.createdAt %}Bulletin du {{ forecast.createdAt|date('d/m/Y à H:i', 'Europe/Paris') }}{% else %}Bulletin sans date{% endif %}</span><span class="expand" aria-hidden="true">+</span></summary>
                                 <div class="forecast-text">{{ forecast.foreca ?: 'Le contenu de cette prévision n’est pas encore renseigné.' }}</div>

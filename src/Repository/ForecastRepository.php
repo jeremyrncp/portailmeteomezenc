@@ -28,7 +28,7 @@ class ForecastRepository extends ServiceEntityRepository
             ->orderBy('undated', 'ASC')
             ->addOrderBy('forecast.createdAt', 'DESC')
             ->addOrderBy('forecast.id', 'DESC')
-            ->setMaxResults(5)
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult();
     }
